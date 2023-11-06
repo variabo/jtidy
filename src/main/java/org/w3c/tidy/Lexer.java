@@ -3436,11 +3436,13 @@ public class Lexer
             if (c == '&')
             {
                 // no entities in ID attributes
+            	/*
                 if ("id".equalsIgnoreCase(name))
                 {
                     report.attrError(this, null, null, Report.ENTITY_IN_ID);
                     continue;
                 }
+                //*/
 
                 addCharToLexer(c);
                 parseEntity((short) 0);
@@ -3986,6 +3988,62 @@ public class Lexer
         if (element.tag == this.configuration.tt.tagIframe)
         {
             return false;
+        }
+
+        if (element.tag == this.configuration.tt.tagLink)
+        {
+            return false;
+        }
+        
+        if (element.tag == this.configuration.tt.tagMeta)
+        {
+        	return false;
+        }
+        
+        if (element.tag == this.configuration.tt.tagSpan)
+        {
+        	return false;
+        }
+        if (element.tag == this.configuration.tt.tagUl)
+        {
+        	return false;
+        }
+        
+        if (element.tag == this.configuration.tt.tagLi)
+        {
+        	return false;
+        }
+        
+        if (element.tag == this.configuration.tt.tagOl)
+        {
+        	return false;
+        }
+        
+        if (element.tag == this.configuration.tt.tagTr)
+        {
+        	return false;
+        }
+        
+        if (element.tag == this.configuration.tt.tagTd)
+        {
+        	return false;
+        }
+        
+        
+        if (element.tag == this.configuration.tt.tagDiv)
+        {
+        	return false;
+        }
+        if (element.tag == this.configuration.tt.tagSvg)
+        {
+        	return false;
+        }
+        if (element.tag == this.configuration.tt.tagFigcaption)
+        {
+        	return false;
+        }
+        if (this.configuration.isTagDefined(element.tag.name)) {
+        	return false;
         }
 
         return element.getAttrByName("id") == null && element.getAttrByName("name") == null;

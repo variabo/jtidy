@@ -88,18 +88,20 @@ public final class TagTable
         new Dict("head", Dict.VERS_ALL, (Dict.CM_HTML | Dict.CM_OPT | Dict.CM_OMITST), ParserImpl.HEAD, null),
         new Dict("title", Dict.VERS_ALL, Dict.CM_HEAD, ParserImpl.TITLE, null),
         new Dict("base", Dict.VERS_ALL, (Dict.CM_HEAD | Dict.CM_EMPTY), ParserImpl.EMPTY, null),
-        new Dict("link", Dict.VERS_ALL, (Dict.CM_HEAD | Dict.CM_EMPTY), ParserImpl.EMPTY, TagCheckImpl.LINK),
-        new Dict("meta", Dict.VERS_ALL, (Dict.CM_HEAD | Dict.CM_EMPTY), ParserImpl.EMPTY, TagCheckImpl.META),
+        //new Dict("link", Dict.VERS_ALL, (Dict.CM_HEAD | Dict.CM_EMPTY), ParserImpl.EMPTY, TagCheckImpl.LINK),
+        new Dict("link", Dict.VERS_ALL, (Dict.CM_HEAD | Dict.CM_BLOCK | Dict.CM_EMPTY), ParserImpl.EMPTY, TagCheckImpl.LINK),
+        new Dict("meta", Dict.VERS_ALL, (Dict.CM_HEAD | Dict.CM_BLOCK | Dict.CM_EMPTY), ParserImpl.EMPTY, TagCheckImpl.META),
         new Dict(
             "style",
             Dict.without(Dict.VERS_HTML40, Dict.VERS_BASIC),
-            Dict.CM_HEAD,
+            //Dict.CM_HEAD,
+            (Dict.CM_HEAD | Dict.CM_BLOCK),
             ParserImpl.SCRIPT,
             TagCheckImpl.STYLE),
         new Dict(
             "script",
             Dict.without(Dict.VERS_HTML40, Dict.VERS_BASIC),
-            (Dict.CM_HEAD | Dict.CM_MIXED | Dict.CM_BLOCK | Dict.CM_INLINE),
+            (Dict.CM_HEAD | Dict.CM_MIXED | Dict.CM_BLOCK),
             ParserImpl.SCRIPT,
             TagCheckImpl.SCRIPT),
         new Dict(
@@ -261,6 +263,7 @@ public final class TagTable
         new Dict("abbr", Dict.VERS_HTML40, Dict.CM_INLINE, ParserImpl.INLINE, null),
         new Dict("acronym", Dict.VERS_HTML40, Dict.CM_INLINE, ParserImpl.INLINE, null),
         new Dict("span", Dict.VERS_FROM32, Dict.CM_INLINE, ParserImpl.INLINE, null),
+        //new Dict("span", Dict.VERS_FROM32, Dict.CM_BLOCK, ParserImpl.BLOCK, null),
         new Dict("blink", Dict.VERS_PROPRIETARY, Dict.CM_INLINE, ParserImpl.INLINE, null),
         new Dict("nobr", Dict.VERS_PROPRIETARY, Dict.CM_INLINE, ParserImpl.INLINE, null),
         new Dict("wbr", Dict.VERS_PROPRIETARY, (Dict.CM_INLINE | Dict.CM_EMPTY), ParserImpl.EMPTY, null),
@@ -288,7 +291,8 @@ public final class TagTable
             (Dict.CM_BLOCK | Dict.CM_EMPTY),
             ParserImpl.EMPTY,
             TagCheckImpl.AREA),
-        new Dict("input", Dict.VERS_ALL, (Dict.CM_INLINE | Dict.CM_IMG | Dict.CM_EMPTY), ParserImpl.EMPTY, null),
+        //new Dict("input", Dict.VERS_ALL, (Dict.CM_INLINE | Dict.CM_IMG | Dict.CM_EMPTY), ParserImpl.EMPTY, null),
+        new Dict("input", Dict.VERS_ALL, (Dict.CM_BLOCK | Dict.CM_IMG | Dict.CM_EMPTY), ParserImpl.EMPTY, null),
         new Dict("select", Dict.VERS_ALL, (Dict.CM_INLINE | Dict.CM_FIELD), ParserImpl.SELECT, null),
         new Dict("option", Dict.VERS_ALL, (Dict.CM_FIELD | Dict.CM_OPT), ParserImpl.TEXT, null),
         new Dict(
@@ -298,9 +302,11 @@ public final class TagTable
             ParserImpl.OPTGROUP,
             null),
         new Dict("textarea", Dict.VERS_ALL, (Dict.CM_INLINE | Dict.CM_FIELD), ParserImpl.TEXT, null),
-        new Dict("label", Dict.VERS_HTML40, Dict.CM_INLINE, ParserImpl.INLINE, null),
+        //new Dict("label", Dict.VERS_HTML40, Dict.CM_INLINE, ParserImpl.INLINE, null),
+        new Dict("label", Dict.VERS_HTML40, Dict.CM_BLOCK, ParserImpl.BLOCK, null),
         new Dict("legend", Dict.without(Dict.VERS_HTML40, Dict.VERS_BASIC), Dict.CM_INLINE, ParserImpl.INLINE, null),
         new Dict("button", Dict.without(Dict.VERS_HTML40, Dict.VERS_BASIC), Dict.CM_INLINE, ParserImpl.INLINE, null),
+        //new Dict("button", Dict.without(Dict.VERS_HTML40, Dict.VERS_BASIC), Dict.CM_BLOCK, ParserImpl.BLOCK, null),
         new Dict("basefont", Dict.VERS_LOOSE, (Dict.CM_INLINE | Dict.CM_EMPTY), ParserImpl.EMPTY, null),
         new Dict("font", Dict.VERS_LOOSE, Dict.CM_INLINE, ParserImpl.INLINE, null),
         new Dict("bdo", Dict.without(Dict.VERS_HTML40, Dict.VERS_BASIC), Dict.CM_INLINE, ParserImpl.INLINE, null),
@@ -321,10 +327,12 @@ public final class TagTable
         new Dict("figure", Dict.VERS_HTML5, Dict.CM_BLOCK, ParserImpl.BLOCK, null),
         new Dict("footer", Dict.VERS_HTML5, Dict.CM_BLOCK, ParserImpl.BLOCK, null),
         new Dict("header", Dict.VERS_HTML5, Dict.CM_BLOCK, ParserImpl.BLOCK, null),
-        new Dict("main", Dict.VERS_HTML5, Dict.CM_INLINE, ParserImpl.INLINE, null),
+        //new Dict("main", Dict.VERS_HTML5, Dict.CM_INLINE, ParserImpl.INLINE, null),
+        new Dict("main", Dict.VERS_HTML5, Dict.CM_BLOCK, ParserImpl.BLOCK, null),
         new Dict("menuitem", Dict.VERS_HTML5, Dict.CM_INLINE, ParserImpl.INLINE, null),
         new Dict("meter", Dict.VERS_HTML5, Dict.CM_INLINE, ParserImpl.INLINE, null),
-        new Dict("nav", Dict.VERS_HTML5, Dict.CM_INLINE, ParserImpl.INLINE, null),
+        //new Dict("nav", Dict.VERS_HTML5, Dict.CM_INLINE, ParserImpl.INLINE, null),
+        new Dict("nav", Dict.VERS_HTML5, Dict.CM_BLOCK, ParserImpl.BLOCK, null),
         new Dict("progress", Dict.VERS_HTML5, Dict.CM_INLINE, ParserImpl.INLINE, null),
         new Dict("section", Dict.VERS_HTML5, Dict.CM_BLOCK, ParserImpl.BLOCK, null),
         new Dict("summary", Dict.VERS_HTML5, Dict.CM_BLOCK, ParserImpl.BLOCK, null),
@@ -416,6 +424,10 @@ public final class TagTable
      * h2 tag.
      */
     protected Dict tagH2;
+    protected Dict tagH3;
+    protected Dict tagH4;
+    protected Dict tagH5;
+    protected Dict tagH6;
 
     /**
      * p tag.
@@ -506,11 +518,17 @@ public final class TagTable
      * i tag.
      */
     protected Dict tagI;
+    protected Dict tagS;
+    protected Dict tagStrike;
 
     /**
      * strong tag.
      */
     protected Dict tagStrong;
+    protected Dict tagSub;
+    protected Dict tagSup;
+
+    protected Dict tagButton;
 
     /**
      * mark tag.
@@ -646,6 +664,8 @@ public final class TagTable
      * span tag.
      */
     protected Dict tagSpan;
+    protected Dict tagCite;
+    protected Dict tagCode;
 
     /**
      * input tag.
@@ -721,6 +741,8 @@ public final class TagTable
      * nav tag.
      */
     protected Dict tagNav;
+
+    protected Dict tagLabel;
 
     /**
      * progress tag.
@@ -856,6 +878,10 @@ public final class TagTable
         tagListing = lookup("listing");
         tagH1 = lookup("h1");
         tagH2 = lookup("h2");
+        tagH3 = lookup("h3");
+        tagH4 = lookup("h4");
+        tagH5 = lookup("h5");
+        tagH6 = lookup("h6");
         tagP = lookup("p");
         tagUl = lookup("ul");
         tagOl = lookup("ol");
@@ -874,7 +900,12 @@ public final class TagTable
         tagLink = lookup("link");
         tagB = lookup("b");
         tagI = lookup("i");
+        tagS = lookup("s");
+        tagStrike = lookup("strike");
         tagStrong = lookup("strong");
+        tagSup = lookup("sup");
+        tagSub = lookup("sub");
+        tagButton = lookup("button");
         tagEm = lookup("em");
         tagBig = lookup("big");
         tagSmall = lookup("small");
@@ -902,6 +933,8 @@ public final class TagTable
         tagObject = lookup("object");
         tagDiv = lookup("div");
         tagSpan = lookup("span");
+        tagCite = lookup("cite");
+        tagCode = lookup("code");
         tagInput = lookup("input");
         tagQ = lookup("q");
         tagBlink = lookup("blink");
@@ -919,6 +952,7 @@ public final class TagTable
         tagMenuitem = lookup("menuitem");
         tagMeter = lookup("meter");
         tagNav = lookup("nav");
+        tagLabel = lookup("label");
         tagProgress = lookup("progress");
         tagRp = lookup("rp");
         tagRt = lookup("rt");

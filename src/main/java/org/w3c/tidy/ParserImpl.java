@@ -454,11 +454,13 @@ public final class ParserImpl
 
                 if (node.type == Node.START_TAG || node.type == Node.START_END_TAG)
                 {
+                	/*
                     if (node.tag != null && (node.tag.model & Dict.CM_HEAD) != 0)
                     {
                         moveToHead(lexer, html, node, nestingLevel);
                         continue;
                     }
+                    //*/
 
                     // #427675 - discard illegal frame element following a frameset - fix by Randy Waki 11 Oct 00
                     if (frameset != null && node.tag == tt.tagFrame)
@@ -886,11 +888,13 @@ public final class ParserImpl
                         continue;
                     }
 
+                    /*
                     if ((node.tag.model & Dict.CM_HEAD) != 0)
                     {
                         moveToHead(lexer, body, node, nestingLevel);
                         continue;
                     }
+                    //*/
 
                     if ((node.tag.model & Dict.CM_LIST) != 0)
                     {
@@ -1041,11 +1045,13 @@ public final class ParserImpl
 
                 if (node.type == Node.START_TAG || node.type == Node.START_END_TAG)
                 {
+                	/*
                     if (node.tag != null && (node.tag.model & Dict.CM_HEAD) != 0)
                     {
                         moveToHead(lexer, frameset, node, nestingLevel);
                         continue;
                     }
+                    //*/
                 }
 
                 if (node.tag == tt.tagBody)
@@ -1548,7 +1554,9 @@ public final class ParserImpl
                 }
 
                 // block level tags end this element
-                if ((node.tag.model & Dict.CM_INLINE) == 0)
+                if ((node.tag.model & Dict.CM_INLINE) == 0
+                		&& element.tag != tt.tagA
+                		&& element.tag != tt.tagSpan)
                 {
                     if (node.type != Node.START_TAG)
                     {
@@ -1561,11 +1569,13 @@ public final class ParserImpl
                         lexer.report.warning(lexer, element, node, Report.MISSING_ENDTAG_BEFORE);
                     }
 
+                    /*
                     if ((node.tag.model & Dict.CM_HEAD) != 0 && (node.tag.model & Dict.CM_BLOCK) == 0)
                     {
                         moveToHead(lexer, element, node, nestingLevel);
                         continue;
                     }
+                    //*/
 
                     // prevent anchors from propagating into block tags except for headings h1 to h6
 
@@ -2315,11 +2325,13 @@ public final class ParserImpl
                     {
                         // if parent is a table cell, avoid inferring the end of the cell
 
+                    	/*
                         if ((node.tag.model & Dict.CM_HEAD) != 0)
                         {
                             moveToHead(lexer, element, node, nestingLevel);
                             continue;
                         }
+                        // */
 
                         if ((node.tag.model & Dict.CM_LIST) != 0)
                         {
@@ -2369,11 +2381,13 @@ public final class ParserImpl
                     {
                         // things like list items
 
+                    	/*
                         if ((node.tag.model & Dict.CM_HEAD) != 0)
                         {
                             moveToHead(lexer, element, node, nestingLevel);
                             continue;
                         }
+                        //*/
 
                         // special case where a form start tag occurs in a tr and is followed by td or th
                         if (element.tag == tt.tagForm && element.parent.tag == tt.tagTd && element.parent.implicit)
@@ -2606,11 +2620,13 @@ public final class ParserImpl
                         lexer.exiled = false;
                         continue;
                     }
+                    /*
                     else if ((node.tag.model & Dict.CM_HEAD) != 0)
                     {
                         moveToHead(lexer, table, node, nestingLevel);
                         continue;
                     }
+                    //*/
                 }
 
                 // if this is the end tag for an ancestor element then infer end tag for this element
@@ -2842,12 +2858,14 @@ public final class ParserImpl
                         lexer.exiled = false;
                         continue;
                     }
+                    /*
                     else if ((node.tag.model & Dict.CM_HEAD) != 0)
                     {
                         lexer.report.warning(lexer, rowgroup, node, Report.TAG_NOT_ALLOWED_IN);
                         moveToHead(lexer, rowgroup, node, nestingLevel);
                         continue;
                     }
+                    //*/
                 }
 
                 // if this is the end tag for ancestor element then infer end tag for this element
@@ -3051,12 +3069,14 @@ public final class ParserImpl
                         lexer.exiled = false;
                         continue;
                     }
+                    /*
                     else if ((node.tag.model & Dict.CM_HEAD) != 0)
                     {
                         lexer.report.warning(lexer, row, node, Report.TAG_NOT_ALLOWED_IN);
                         moveToHead(lexer, row, node, nestingLevel);
                         continue;
                     }
+                    //*/
                 }
 
                 if (!(node.tag == tt.tagTd || node.tag == tt.tagTh))

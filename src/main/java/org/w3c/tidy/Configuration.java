@@ -1174,4 +1174,19 @@ public class Configuration implements Serializable
         return null;
     }
 
+    public boolean isTagDefined(String tagName) {
+    	return isTagKnown(tagName, "new-blocklevel-tags") || isTagKnown(tagName, "new-inline-tags");
+    }
+
+    protected boolean isTagKnown(String tagName, String propName) {
+    	Object v = properties.get(propName);
+    	if (v instanceof String) {
+    		String s = (String) v;
+    		String[] tags = s.split(" ");
+    		for (String t : tags) {
+				if (tagName.equals(t)) return true;
+			}
+    	}
+    	return false;
+    }
 }

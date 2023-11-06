@@ -1198,6 +1198,14 @@ public class PPrint
 
                     ++i;
                     continue;
+                } else if (c == '\n') {
+                    addC('&', linelen++);
+                    addC('#', linelen++);
+                    addC('1', linelen++);
+                    addC('0', linelen++);
+                    addC(';', linelen++);
+                    ++i;
+                    continue;
                 }
 
                 // look for UTF-8 multibyte character
@@ -1931,7 +1939,21 @@ public class PPrint
         String start = TidyUtils.getString(node.textarray, node.start, len);
 
         int indexOfCData = start.indexOf(CDATA_START);
-        return indexOfCData > -1 && indexOfCData <= len;
+        if (indexOfCData > -1 && indexOfCData <= len) {
+        	return true;
+        }
+        boolean containsSpecialChars = false;
+        for (int i = node.start; i < node.end; i++) {
+			byte c = node.textarray[i];
+			if (c == '>' || c == '<' || c == '&') {
+				containsSpecialChars = true;
+				break;
+			}
+		}
+        if (!containsSpecialChars) {
+        	return true;
+        }
+        return false;
     }
 
     /**
@@ -1974,9 +1996,9 @@ public class PPrint
         {
             // flushLine(fout, indent);
         }
+        flushLine(fout, indent);
 
-        indent = 0;
-
+        int oldIndent = indent;
         // start script
         printTag(lexer, fout, mode, indent, node);
         // flushLine(fout, indent); // extra newline
@@ -2020,8 +2042,16 @@ public class PPrint
             }
         }
 
+        indent = 0;
+
+        boolean hasContent = false;
         for (content = node.content; content != null; content = content.next)
         {
+        	if (content.type == Node.TEXT_NODE && content.start == content.end) {
+        		// Empty content!
+        		continue;
+        	}
+        	hasContent = true;
             printTree(fout, (short) (mode | PREFORMATTED | NOWRAP | CDATA), 0, lexer, content);
 
             if (content.next == null)
@@ -2031,7 +2061,7 @@ public class PPrint
 
         }
 
-        if (contentIndent < 0)
+        if (contentIndent < 0 && hasContent)
         {
             condFlushLine(fout, indent);
             contentIndent = 0;
@@ -2065,6 +2095,7 @@ public class PPrint
             }
         }
 
+        if (!hasCData) indent = oldIndent;
         printEndTag(mode, indent, node);
 
         if (!lexer.configuration.indentContent && node.next != null
@@ -2102,22 +2133,65 @@ public class PPrint
             {
                 for (node = node.content; node != null; node = node.next)
                 {
+                	if (node.type != Node.TEXT_NODE) {
+                		return true;
+                	}
+                	//*
                     if (node.tag != null && TidyUtils.toBoolean(node.tag.model & Dict.CM_BLOCK))
                     {
                         return true;
                     }
+                    //*/
                 }
 
                 return false;
             }
 
-            if (TidyUtils.toBoolean(node.tag.model & Dict.CM_HEADING))
-            {
-                return false;
-            }
+//            if (TidyUtils.toBoolean(node.tag.model & Dict.CM_HEADING))
+//            {
+//                return false;
+//            }
 
-            if (node.tag == tt.tagP)
+            if (node.tag != null && TidyUtils.toBoolean(node.tag.model & Dict.CM_HEADING)
+            		|| node.tag == tt.tagP || node.tag == tt.tagA
+            		|| node.tag == tt.tagSup
+            		|| node.tag == tt.tagSub
+            		|| node.tag == tt.tagSmall
+            		|| node.tag == tt.tagStrong
+            		|| node.tag == tt.tagI
+            		|| node.tag == tt.tagS
+            		|| node.tag == tt.tagStrike
+            		|| node.tag == tt.tagB
+            		|| node.tag == tt.tagCite
+            		|| node.tag == tt.tagCode
+            		|| node.tag == tt.tagSpan
+            		|| node.tag == tt.tagLabel
+            		|| node.tag == tt.tagUl
+            		|| node.tag == tt.tagLi
+            		|| node.tag == tt.tagOl
+            		|| node.tag == tt.tagH1
+            		|| node.tag == tt.tagH2
+            		|| node.tag == tt.tagH3
+            		|| node.tag == tt.tagH4
+            		|| node.tag == tt.tagH5
+            		|| node.tag == tt.tagH6
+            		|| node.tag == tt.tagDiv
+            		|| node.tag == tt.tagNoscript
+            		|| node.tag == tt.tagButton
+            		|| node.tag == tt.tagTd
+            		|| node.tag == tt.tagTr
+            		|| node.tag == tt.tagCaption // TODO:
+            		|| node.tag == tt.tagFigcaption // TODO:
+            		|| node.tag == tt.tagScript
+            		)
             {
+            	for (node = node.content; node != null; node = node.next)
+                {
+                    if (node.type != Node.TEXT_NODE)
+                    {
+                        return true;
+                    }
+                }
                 return false;
             }
 
@@ -2262,7 +2336,11 @@ public class PPrint
             {
                 condFlushLine(fout, indent);
             }
-            else if (node.tag == tt.tagBr || node.tag == tt.tagHr)
+            else if (node.tag == tt.tagBr || node.tag == tt.tagHr
+            		|| node.tag == tt.tagMeta
+            		|| node.tag == tt.tagLink
+                    || node.tag == tt.tagStyle
+            		|| node.tag == tt.tagScript)
             {
                 flushLine(fout, indent);
             }
@@ -2279,10 +2357,13 @@ public class PPrint
             {
                 condFlushLine(fout, indent);
 
-                indent = 0;
-                condFlushLine(fout, indent);
                 printTag(lexer, fout, mode, indent, node);
-                flushLine(fout, indent, false);
+                //flushLine(fout, indent, false);
+                condFlushLine(fout, indent);
+
+                int oldIndent = indent;
+                condFlushLine(fout, indent);
+                indent = 0;
 
                 for (content = node.content; content != null; content = content.next)
                 {
@@ -2291,12 +2372,14 @@ public class PPrint
 
                 condFlushLine(fout, indent, false);
                 printEndTag(mode, indent, node);
-                flushLine(fout, indent, false);
+                //flushLine(fout, indent, false);
+                condFlushLine(fout, indent);
 
                 if (!this.configuration.indentContent && node.next != null)
                 {
                     flushLine(fout, indent);
                 }
+                indent = oldIndent;
             }
             else if (node.tag == tt.tagStyle || node.tag == tt.tagScript)
             {
@@ -2336,16 +2419,28 @@ public class PPrint
                 if (shouldIndent(node))
                 {
                     condFlushLine(fout, indent);
+                	boolean alreadyNewLine = true;
                     indent += this.configuration.spaces;
 
                     for (content = node.content; content != null; content = content.next)
                     {
                         printTree(fout, mode, indent, lexer, content);
+                        alreadyNewLine = false;
+                        if (content.next != null && content.type != Node.TEXT_NODE && content.tag != tt.tagLi) {
+                        	condFlushLine(fout, indent);
+                        	alreadyNewLine = true;
+                        } else if (content.next != null && content.next.type != Node.TEXT_NODE && content.next.tag != null && shouldIndent(content.next)) {
+                        	condFlushLine(fout, indent);
+                        	alreadyNewLine = true;
+                        }
                     }
-
-                    condFlushLine(fout, indent);
+                    if (!alreadyNewLine) {
+                    	condFlushLine(fout, indent);
+                    }
                     indent -= this.configuration.spaces;
-                    condFlushLine(fout, indent);
+                    if (!alreadyNewLine) {
+                    	condFlushLine(fout, indent);
+                    }
                 }
                 else
                 {
@@ -2353,10 +2448,19 @@ public class PPrint
                     for (content = node.content; content != null; content = content.next)
                     {
                         printTree(fout, mode, indent, lexer, content);
+                        if (content.next != null && content.type != Node.TEXT_NODE && content.tag != tt.tagLi) {
+                        	condFlushLine(fout, indent);
+                        } else if (content.next != null && content.next.type != Node.TEXT_NODE && content.next.tag != null && shouldIndent(content.next)) {
+                        	condFlushLine(fout, indent);
+                        }
                     }
                 }
 
                 printEndTag(mode, indent, node);
+                if (node.tag == tt.tagA)
+                {
+                    flushLine(fout, indent);
+                }
             }
             else
             {
@@ -2365,7 +2469,11 @@ public class PPrint
 
                 if (this.configuration.smartIndent && node.prev != null)
                 {
-                    flushLine(fout, indent);
+                	if (node.prev.type == Node.TEXT_NODE && node.prev.start == node.prev.end) {
+                		//System.out.println("Warning " + node.element + " has 0-length text!");
+                	} else if (node.tag != tt.tagLi) {
+                		flushLine(fout, indent);
+                    }
                 }
 
                 // do not omit elements with attributes
@@ -2409,14 +2517,20 @@ public class PPrint
                             flushLine(fout, indent);
                         }
 
+                        int currentIndent = (shouldIndent(node) ? indent + this.configuration.spaces : indent);
                         printTree(
                             fout,
                             mode,
-                            (shouldIndent(node) ? indent + this.configuration.spaces : indent),
+                            currentIndent,
                             lexer,
                             content);
 
                         last = content;
+                        if (content.next != null && content.type != Node.TEXT_NODE && content.tag != tt.tagLi) {
+                        	condFlushLine(fout, currentIndent);
+                        } else if (content.next != null && content.next.type != Node.TEXT_NODE && content.next.tag != null && shouldIndent(content.next)) {
+                        	condFlushLine(fout, indent);
+                        }
                     }
                 }
 
