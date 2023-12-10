@@ -1115,7 +1115,18 @@ public final class ParserImpl
             else if (TidyUtils.toBoolean(element.tag.model & Dict.CM_INLINE)
                     // EUNYEE: Add back this condition 
                     // because this causes the infinite loop problem when the span does not have the ending tag.
-                    && element.tag != tt.tagA && element.tag != tt.tagSpan)
+                    && element.tag != tt.tagA && element.tag != tt.tagSpan
+                    && element.tag != tt.tagI
+                    && element.tag != tt.tagB
+                    && element.tag != tt.tagEm
+                    && element.tag != tt.tagBig
+                    && element.tag != tt.tagSmall
+                    && element.tag != tt.tagS
+                    && element.tag != tt.tagStrike
+                    && element.tag != tt.tagStrong
+                    && element.tag != tt.tagSub
+                    && element.tag != tt.tagSup
+                    )
             {
                 // && element.tag != tt.tagSpan #540571 Inconsistent behaviour with span inline element
                 lexer.pushInline(element);
@@ -1556,7 +1567,18 @@ public final class ParserImpl
                 // block level tags end this element
                 if ((node.tag.model & Dict.CM_INLINE) == 0
                 		&& element.tag != tt.tagA
-                		&& element.tag != tt.tagSpan)
+                		&& element.tag != tt.tagSpan
+                        && element.tag != tt.tagI
+                        && element.tag != tt.tagB
+                        && element.tag != tt.tagEm
+                        && element.tag != tt.tagBig
+                        && element.tag != tt.tagSmall
+                        && element.tag != tt.tagS
+                        && element.tag != tt.tagStrike
+                        && element.tag != tt.tagStrong
+                        && element.tag != tt.tagSub
+                        && element.tag != tt.tagSup
+                		)
                 {
                     if (node.type != Node.START_TAG)
                     {

@@ -4042,6 +4042,21 @@ public class Lexer
         {
         	return false;
         }
+        if (element.tag == this.configuration.tt.tagI
+                || element.tag == this.configuration.tt.tagI
+                || element.tag == this.configuration.tt.tagB
+                || element.tag == this.configuration.tt.tagEm
+                || element.tag == this.configuration.tt.tagBig
+                || element.tag == this.configuration.tt.tagSmall
+                || element.tag == this.configuration.tt.tagS
+                || element.tag == this.configuration.tt.tagStrike
+                || element.tag == this.configuration.tt.tagStrong
+                || element.tag == this.configuration.tt.tagSub
+                || element.tag == this.configuration.tt.tagSup
+        		)
+        {
+        	return false;
+        }
         if (this.configuration.isTagDefined(element.tag.name)) {
         	return false;
         }
