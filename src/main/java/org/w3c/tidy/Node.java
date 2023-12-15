@@ -1493,6 +1493,7 @@ public class Node
                 && attr.value.toLowerCase().contains("javascript"))
             {
                 result = true;
+                break;
             }
         }
 

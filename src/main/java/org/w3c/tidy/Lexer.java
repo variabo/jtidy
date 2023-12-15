@@ -1896,12 +1896,14 @@ public class Lexer
                     report.warning(this, null, null, Report.BAD_CDATA_CONTENT);
 
                     /* if javascript insert backslash before / */
+                    /*
                     if (container.isJavaScript()) {
                         if (lexsize - start - 1 >= 0)
                             System.arraycopy(lexbuf, start - 1, lexbuf, start, lexsize - start - 1);
-                        lexbuf[start-1] = '\\';
+                        lexbuf[start] = '\\';
                         lexsize++;
                     }
+                    //*/
                 }
                 state = CDATA_INTERMEDIATE;
             }
