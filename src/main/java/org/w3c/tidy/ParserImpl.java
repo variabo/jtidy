@@ -918,12 +918,14 @@ public final class ParserImpl
                         }
                         lexer.excludeBlocks = true;
                     }
+                    /*
                     else if (node.tag == tt.tagInput)
                     {
                         lexer.ungetToken();
                         node = lexer.inferredTag("form");
                         lexer.excludeBlocks = true;
                     }
+                    //*/
                     else
                     {
                         if ((node.tag.model & (Dict.CM_ROW | Dict.CM_FIELD)) == 0)

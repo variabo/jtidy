@@ -2022,6 +2022,10 @@ public class PPrint
                 {
                     commentStart = VB_COMMENT_START;
                     commentEnd = VB_COMMENT_END;
+                } else if (type.value != null && type.value.indexOf("script") != -1)
+                {
+                    commentStart = JS_COMMENT_START;
+                    commentEnd = JS_COMMENT_END;
                 }
             }
 

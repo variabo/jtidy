@@ -62,9 +62,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 
 /**
@@ -1178,15 +1180,24 @@ public class Configuration implements Serializable
     	return isTagKnown(tagName, "new-blocklevel-tags") || isTagKnown(tagName, "new-inline-tags");
     }
 
+    private Set<String> knownPropNames = new HashSet<String>();
+    private Set<String> knownTags = new HashSet<String>();
+    
     protected boolean isTagKnown(String tagName, String propName) {
+    	if (knownPropNames.contains(propName)) {
+    		return knownTags.contains(tagName);
+    	}
     	Object v = properties.get(propName);
     	if (v instanceof String) {
     		String s = (String) v;
     		String[] tags = s.split(" ");
     		for (String t : tags) {
-				if (tagName.equals(t)) return true;
+    			knownTags.add(t);
+				//if (tagName.equals(t)) return true;
 			}
     	}
-    	return false;
+    	knownPropNames.add(propName);
+    	//return false;
+		return knownTags.contains(tagName);
     }
 }
