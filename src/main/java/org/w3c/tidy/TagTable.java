@@ -86,7 +86,7 @@ public final class TagTable
             ParserImpl.HTML,
             TagCheckImpl.HTML),
         new Dict("head", Dict.VERS_ALL, (Dict.CM_HTML | Dict.CM_OPT | Dict.CM_OMITST), ParserImpl.HEAD, null),
-        new Dict("title", Dict.VERS_ALL, Dict.CM_HEAD, ParserImpl.TITLE, null),
+        new Dict("title", Dict.VERS_ALL, Dict.CM_HEAD | Dict.CM_BLOCK, ParserImpl.TITLE, null),
         new Dict("base", Dict.VERS_ALL, (Dict.CM_HEAD | Dict.CM_EMPTY), ParserImpl.EMPTY, null),
         //new Dict("link", Dict.VERS_ALL, (Dict.CM_HEAD | Dict.CM_EMPTY), ParserImpl.EMPTY, TagCheckImpl.LINK),
         new Dict("link", Dict.VERS_ALL, (Dict.CM_HEAD | Dict.CM_BLOCK | Dict.CM_EMPTY), ParserImpl.EMPTY, TagCheckImpl.LINK),
