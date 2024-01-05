@@ -238,7 +238,10 @@ public final class TagTable
         new Dict(
             "noscript",
             Dict.without(Dict.VERS_HTML40, Dict.VERS_BASIC),
-            (Dict.CM_BLOCK | Dict.CM_INLINE | Dict.CM_MIXED),
+            // Add Dict.CM_HEAD here
+            // https://t.co/sqUJHhaQAu
+            // <head><noscript><META http-equiv="refresh" content="0;URL=https://on.ft.com/41R1Qrx"></noscript><title>https://on.ft.com/41R1Qrx</title></head><script>window.opener = null; location.replace("https:\/\/on.ft.com\/41R1Qrx")</script>
+            (Dict.CM_HEAD | Dict.CM_BLOCK | Dict.CM_INLINE | Dict.CM_MIXED),
             ParserImpl.BLOCK,
             null),
         new Dict("b", Dict.without(Dict.VERS_ALL, Dict.VERS_BASIC), Dict.CM_INLINE, ParserImpl.INLINE, null),
